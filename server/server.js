@@ -6,23 +6,118 @@ var urlServer = 'http://localhost:5000';
 var app = express();
 
 var teams = [
-
+  {
+    id: 1,
+    logo: 'http://www.logo-designer.co/wp-content/uploads/2017/01/2017-interbrand-logo-design-juventus-football.png',
+    name: 'Juventus',
+    country: 'Italie',
+    stadium: 'Juventus Stadium',
+    coach: 'Allegri',
+    founded: 1897,
+    nbCup: 5
+  },
+  {
+    id: 2,
+    name: 'PSG',
+    logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/8/86/Paris_Saint-Germain_Logo.svg/768px-Paris_Saint-Germain_Logo.svg.png',
+    country: 'France',
+    stadium: 'Parc des Princes',
+    coach: 'Emery',
+    founded: 1970,
+    nbCup: 2
+  },
+  {
+    id: 3,
+    logo: 'https://upload.wikimedia.org/wikipedia/fr/a/aa/Blason_RC_Strasbourg_1976.png',
+    name: 'RC Strasbourg',
+    country: 'France',
+    stadium: 'La Meinau',
+    coach: 'Laurent',
+    founded: 1902,
+    nbCup: 1
+  },
+  {
+    id: 4,
+    logo: 'http://www.logo20.com/logo-real-madrid/logo-real-madrid-2.png',
+    name: 'Real Madrid',
+    country: 'Espagne',
+    stadium: 'Santiago Bernabeu',
+    coach: 'Zidane',
+    founded: 1912,
+    nbCup: 6
+  },
+  {
+    id: 5,
+    logo: 'http://images.footmercato.net/club/400x400/13089.png',
+    name: 'Gomido',
+    country: 'Togo',
+    stadium: 'Gomido Arena',
+    coach: '',
+    founded: 1974,
+    nbCup: 2
+  },
+  {
+    id: 6,
+    logo: 'https://seeklogo.com/images/A/as-roma-60-s-logo-5422998DC3-seeklogo.com.png',
+    name: 'AS Roma',
+    country: 'Italie',
+    stadium: 'Olimpico',
+    coach: 'Di Francesco',
+    founded: 1899,
+    nbCup: 1
+  },
 ];
 
 var players = [
+  {
+    id: 1,
+    picture: '',
+    lastname: 'Del Piero',
+    firstname: 'Ale',
+    current_team: 'Juventus',
+    country: 'Italie',
+    position: 'Attaquant'
+  },
+  {
+    id: 2,
+    picture: '',
+    lastname: 'Buffon',
+    firstname: 'Gianluigi',
+    current_team: 'Juventus',
+    country: 'Italie',
+    position: 'Gardien'
+  },
+  {
+    id: 3,
+    picture: '',
+    lastname: 'Areola',
+    firstname: 'Alphonse',
+    current_team: 'PSG',
+    country: 'France',
+    position: 'Gardien'
+  },
+  {
+    id: 4,
+    picture: '',
+    lastname: 'Rabiot',
+    firstname: 'Adrien',
+    current_team: 'PSG',
+    country: 'France',
+    position: 'Milieu'
+  },
 ];
 
 var students = [
   {
-      id:1,
+      id: 1,
       image: 'https://www.thehindu.com/sport/football/article18590831.ece/alternates/FREE_300/Paulo%20Dybala',
       firstname: 'Paolo',
       lastname: 'Dybala',
-      notes: [14, 5, 7],
+      notes: [13, 5, 7],
       group: 'POEI Java'
     },
     {
-        id:2,
+      id: 2,
       image: 'https://www.thehindu.com/sport/football/article18590831.ece/alternates/FREE_300/Paulo%20Dybala',
       firstname: 'Chris',
       lastname: 'Chris',
@@ -30,7 +125,7 @@ var students = [
       group: 'POEI Java'
     },
     {
-        id:3,
+      id: 3,
       image: 'https://www.thehindu.com/sport/football/article18590831.ece/alternates/FREE_300/Paulo%20Dybala',
       firstname: 'Jean-François',
       lastname: 'El Flouz',
@@ -38,18 +133,20 @@ var students = [
       group: 'ESD'
     },
     {
-      id:4,
+      id: 4,
       image: 'https://www.thehindu.com/sport/football/article18590831.ece/alternates/FREE_300/Paulo%20Dybala',
       firstname: 'Francesco',
-      lastname: 'El Flouz',
-      notes: [4, 12, 20],
+      lastname: 'Tutti Quanti',
+      notes: [10, 7, 2],
       group: 'ESD'
     }
-  ]
+]
+
 // Middlewares
 app.use(bodyParser.json());
+//app.use(express.static('public'));
 
-//allow cross domain query
+// Permet les requêtes cross-domain
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -58,8 +155,18 @@ app.use(function(req, res, next) {
 });
 
 // Routes
+
+// get
 app.get('/teams', (req, res) => res.json(teams));
 app.get('/students', (req, res) => res.json(students));
+app.get('/students/:id', (req, res) =>
+ let id = req.params.id;
+ for (let i =0; i<students.length; i++){
+ if(students[i].id == id){
+   return res.json(student[i]))
+ }
+}
+res.status(404).send('Etudiant inconnu');
 app.get('/players', (req, res) => res.json(players));
 app.get('/teams/:team/players', (req, res) => {
   var team = req.params.team;
@@ -67,6 +174,7 @@ app.get('/teams/:team/players', (req, res) => {
   return res.json(playersFiltered);
 })
 
+// post
 app.post('/teams', function(req, res) {
   var id = getLastId(teams);
   var team = {
@@ -82,6 +190,22 @@ app.post('/teams', function(req, res) {
   teams.push(team);
   res.json(team);
 })
+
+// put
+app.put('/students/:id', (req, res) => {
+  res.json('ok');
+  if(req.body.id){
+  for(let i = 0; i<students.length; i++){
+    if(students[i].id == req.body.id){
+      students[i] = req.body;
+      break;
+    }
+  }
+return res.json('mise à jour réussie');
+}
+res.status(500).end();
+})
+
 
 // Helper functions
 function getLastId(arr) {
